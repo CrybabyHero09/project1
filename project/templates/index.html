@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Detection Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">Change Detection & Monitoring System</span>
+    </div>
+  </nav>
+
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <div class="col-md-9">
+        <div id="map"></div>
+      </div>
+      <div class="col-md-3 bg-light p-3" id="sidepanel">
+        <h5>Instructions</h5>
+        <p>Draw a rectangle on the map to define your Area of Interest (AOI). The system will process NDVI change between two time periods and notify if significant anthropogenic change is detected.</p>
+        <div id="result" class="alert alert-info mt-4" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+  <script>
+    const map = L.map('map').setView([20.5937, 78.9629], 5);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    const drawControl = new L.Control.Draw({
+      draw: {
+        polyline: false,
+        polygon: false,
+        marker: false,
+        circle: false,
+        circlemarker: false,
+        rectangle: true
+      },
+      edit: {
+        featureGroup: drawnItems
+      }
+    });
+    map.addControl(drawControl);
+
+    map.on('draw:created', function (e) {
+      const layer = e.layer;
+      drawnItems.clearLayers();
+      drawnItems.addLayer(layer);
+
+      const geojson = layer.toGeoJSON();
+      document.getElementById('result').style.display = 'block';
+      document.getElementById('result').innerHTML = 'Processing AOI...';
+
+      fetch('/submit_aoi', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ geojson: geojson })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('result').innerHTML = `✅ Change Detected: <strong>${data.change_pixels}</strong> pixels changed.`;
+      })
+      .catch(err => {
+        document.getElementById('result').classList.add('alert-danger');
+        document.getElementById('result').innerHTML = '❌ Error processing AOI.';
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
