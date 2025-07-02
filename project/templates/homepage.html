@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Landing Section</title>
+  <script>
+    function start(){
+      windows.location.href ="index.html";
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .landing {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      min-height: 100vh;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px;
+      background-color: #ffffff;
+    }
+
+    .content h1 {
+      font-size: 56px;
+      margin-bottom: 20px;
+      color: #00796b;
+    }
+
+    .content p {
+      font-size: 20px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+      color: #555;
+    }
+
+    .btn{
+      margin-top: 80px;
+    }
+
+    .content button {
+      padding: 12px 25px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 30px;
+      letter-spacing: 0.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .content button:hover {
+      background-color: #004d40;
+      box-shadow: 0 8px 10px rgba(0,0,0,0.35);
+    }
+
+    .image {
+      background-image: url("https://images.immediate.co.uk/production/volatile/sites/7/2018/02/Earth-from-space-1-64e9a7c.jpg?quality=90&resize=980,654");
+      background-size: cover;
+      background-position: center;
+    }
+
+    @media (max-width: 768px) {
+      .landing {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        align-items: center;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="landing">
+    <div class="content">
+      <h1>Earth from Above: Robust Monitoring Using Bhoonidhi Satellite Data</h1>
+
+      
+      <p>This project leverages multi-temporal satellite imagery from the Bhoonidhi platform to develop a robust system for change detection, monitoring, and alerting across user-defined Areas of Interest (AOIs). By analyzing time-series satellite data, the system enables accurate identification of land use and environmental changes, supporting applications in urban planning, disaster management, agriculture, and environmental monitoring.
+
+</p>
+
+  <div class="btn">
+    <button onclick="window.location.href='index.html'">Get Started
+      </button>
+  </div>
+      
+    </div>
+    <div class="image"></div>
+  </div>
+
+</body>
+</html>
